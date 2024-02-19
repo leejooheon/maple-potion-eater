@@ -1,11 +1,21 @@
-This is a Kotlin Multiplatform project targeting Desktop.
+<div align="center">
+    <h1>Maple potion eater</h1>
+    <p>메이플랜드 자동 포션 이터</p>
+    <p>maple land automatic potion eater</p>
+</div>
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+* Preview
+  * <img src="./screenshot/preview_display.png">
 
+* Environment
+  * [Kotlin Multiplatform](https://kotlinlang.org/docs/multiplatform.html) project targeting Desktop.
+  * UI: [Jetpack Compose](https://developer.android.com/jetpack/compose)
+  * Image processing: [Javacv](https://github.com/bytedeco/javacv)
+  * Digit detection: [Tesseract](https://github.com/tesseract-ocr/tesseract)
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+* Setup Guide
+  * Download and install [Tesseract](https://tesseract-ocr.github.io/tessdoc/Downloads.html)
+  * <img src="./screenshot/guide_setting.png">
+  * Monitoring on display screen.
+  * <img src="./screenshot/guide_display.png">
+  
