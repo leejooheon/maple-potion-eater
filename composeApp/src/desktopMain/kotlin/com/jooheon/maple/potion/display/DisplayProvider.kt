@@ -81,7 +81,7 @@ class DisplayProvider(
     private fun cropImage(image: BufferedImage, point: Point?): ImageBitmap? {
         if(point == null) return null
         return try {
-            image.getSubimage(point.x(), point.y(), 96, 24).toComposeImageBitmap()
+            image.getSubimage(point.x(), point.y(), 112, 20).toComposeImageBitmap()
         } catch (e: Exception) {
             null
         }
@@ -122,8 +122,8 @@ class DisplayProvider(
     }
 
     private fun initMatchingImages() {
-        val hpImage = ImageUtil.loadImageResource("health_image.jpg").toMat()
-        val mpImage = ImageUtil.loadImageResource("magic_image.jpg").toMat()
+        val hpImage = ImageUtil.loadImageResource("health_image.png").toMat()
+        val mpImage = ImageUtil.loadImageResource("magic_image.png").toMat()
 
         val hpGrayImage = Mat(hpImage.size(), CV_8UC1)
         cvtColor(hpImage, hpGrayImage, COLOR_BGR2GRAY)

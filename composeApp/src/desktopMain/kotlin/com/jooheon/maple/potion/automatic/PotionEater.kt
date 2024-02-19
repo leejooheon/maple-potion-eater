@@ -30,14 +30,14 @@ class PotionEater(
 
             if(it.hpPoint != HealthModel.defaultPoint) {
                 maybeEatPotion(
-                    percentage = (it.hpPoint / state.fullHp),
+                    percentage = ((it.hpPoint.toFloat() / state.fullHp.toFloat()) * 100f).toInt(),
                     targetPercentage = state.hpEatPercentage,
                     keyEvent = KeyEvent.VK_PAGE_UP
                 )
             }
 
             maybeEatPotion(
-                percentage = (it.mpPoint / state.fullMp),
+                percentage = ((it.mpPoint.toFloat() / state.fullMp.toFloat()) * 100f).toInt(),
                 targetPercentage = state.mpEatPercentage,
                 keyEvent = KeyEvent.VK_PAGE_DOWN
             )
