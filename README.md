@@ -4,16 +4,16 @@
     <p>maple land automatic potion eater</p>
 </div>
 
-* Preview
+## Preview
   * <img src="./screenshot/preview_display.png">
 
-* Environment
+## Environment
   * [Kotlin Multiplatform](https://kotlinlang.org/docs/multiplatform.html) project targeting Desktop.
   * UI: [Jetpack Compose](https://developer.android.com/jetpack/compose)
   * Image processing: [Javacv](https://github.com/bytedeco/javacv)
   * Digit detection: [Tesseract](https://github.com/tesseract-ocr/tesseract)
 
-* Setup Guide
+## Setup Guide
   * Download and install [Tesseract](https://tesseract-ocr.github.io/tessdoc/Downloads.html)
   * <img src="./screenshot/guide_setting.png">
   * Monitoring on display screen.
