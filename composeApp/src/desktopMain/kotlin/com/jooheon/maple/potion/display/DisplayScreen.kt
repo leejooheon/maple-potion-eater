@@ -19,11 +19,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.jooheon.maple.potion.health.HealthModel
+import com.jooheon.maple.potion.setting.SettingModel
 
 @Composable
 fun DisplayScreen(
     screenState: DisplayModel,
     healthState: HealthModel,
+    settingState: SettingModel,
 ) {
     Column(
         modifier = Modifier.padding(32.dp)
@@ -84,7 +86,7 @@ fun DisplayScreen(
                 Text(
                     color = Color.Black,
                     style = MaterialTheme.typography.h5,
-                    text = "${healthState.hpPoint} / ${HealthModel.fullHpPoint}",
+                    text = "${healthState.hpPoint} / ${settingState.fullHp}",
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -112,7 +114,7 @@ fun DisplayScreen(
                 Text(
                     color = Color.Black,
                     style = MaterialTheme.typography.h5,
-                    text = "${healthState.mpPoint} / ${HealthModel.fullMpPoint}",
+                    text = "${healthState.mpPoint} / ${settingState.fullMp}",
                 )
             }
         }
@@ -125,7 +127,8 @@ private fun ScreenDisplayPreview() {
     MaterialTheme {
         DisplayScreen(
             screenState = DisplayModel.default,
-            healthState = HealthModel.default
+            healthState = HealthModel.default,
+            settingState = SettingModel.default,
         )
     }
 }

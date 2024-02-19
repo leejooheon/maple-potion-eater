@@ -63,14 +63,19 @@ class HealthProvider(
         if(pointImage == null) return null
 
         return try {
-            val text = tesseract.doOCR(pointImage.toAwtImage()).substringBefore("\n")
-            val result = text.indexOfLast { it == '7' }
-            val filtered = text
-                .substringAfter(" ")
-                .substring(0, result)
+            val origin = tesseract.doOCR(pointImage.toAwtImage()).substringBefore("\n")
+            val filtered = origin.substringAfter(" ").drop(1).dropLast(1)
 
-            println("OCR: $text => $filtered")
-            return filtered.toIntOrNull()
+            val index = if(filtered.length % 2 == 0) {
+                filtered.length/2 - 1
+            } else {
+                filtered.length/2
+            }
+
+            val result = filtered.substring(0, index)
+
+            println("OCR: $origin => $result")
+            return result.toIntOrNull()
         } catch (e: Exception) {
             null
         }

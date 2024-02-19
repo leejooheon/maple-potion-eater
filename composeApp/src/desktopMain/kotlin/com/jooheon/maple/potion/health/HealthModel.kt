@@ -11,7 +11,5 @@ data class HealthModel(
             hpPoint = defaultPoint,
             mpPoint = defaultPoint,
         )
-        const val fullHpPoint = 512
-        const val fullMpPoint = 1024
     }
 }

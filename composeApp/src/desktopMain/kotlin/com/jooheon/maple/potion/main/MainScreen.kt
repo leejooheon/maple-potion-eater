@@ -131,6 +131,7 @@ private fun TabsContent(
                     DisplayScreen(
                         screenState = screenState,
                         healthState = healthState,
+                        settingState = settingState,
                     )
                     Button(onClick = { start = !start }) {
                         Text(
