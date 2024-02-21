@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import com.jooheon.maple.potion.automatic.PotionEater
 import com.jooheon.maple.potion.display.DisplayProvider
 import com.jooheon.maple.potion.display.DisplayScreen
+import com.jooheon.maple.potion.health.HealthModel
 import com.jooheon.maple.potion.health.HealthProvider
 import com.jooheon.maple.potion.setting.SettingEvent
 import com.jooheon.maple.potion.setting.SettingProvider
@@ -119,7 +120,7 @@ private fun TabsContent(
 
     val settingState by settingProvider.model.collectAsState()
     val screenState by displayProvider.model.collectAsState()
-    val healthState by healthProvider.model.collectAsState()
+    val healthState by healthProvider.model.collectAsState(HealthModel.default)
 
     HorizontalPager(pagerState) { page ->
         Column(

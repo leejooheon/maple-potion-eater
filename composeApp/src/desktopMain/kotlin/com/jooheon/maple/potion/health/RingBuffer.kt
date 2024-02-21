@@ -4,7 +4,8 @@ package com.jooheon.maple.potion.health
 class RingBuffer<T>(val size: Int, init: (index: Int) -> T) {
     private val list = MutableList(size, init)
 
-    private var index = 0
+    var index = 0
+        private set
 
     fun getOrNull(index: Int): T? = list.getOrNull(index)
 

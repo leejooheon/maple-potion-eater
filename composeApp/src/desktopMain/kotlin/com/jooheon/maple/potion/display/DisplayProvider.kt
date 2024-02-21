@@ -81,7 +81,7 @@ class DisplayProvider(
     private fun cropImage(image: BufferedImage, point: Point?): ImageBitmap? {
         if(point == null) return null
         return try {
-            image.getSubimage(point.x(), point.y(), 112, 20).toComposeImageBitmap()
+            image.getSubimage(point.x(), point.y(), 112, 24).toComposeImageBitmap()
         } catch (e: Exception) {
             null
         }

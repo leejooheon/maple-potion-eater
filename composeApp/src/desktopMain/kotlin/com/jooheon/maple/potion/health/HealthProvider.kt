@@ -5,8 +5,10 @@ import androidx.compose.ui.graphics.toAwtImage
 import com.jooheon.maple.potion.display.DisplayModel
 import com.jooheon.maple.potion.setting.SettingModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
@@ -24,8 +26,8 @@ class HealthProvider(
 ) {
     private var tesseract: Tesseract? = null
 
-    private val _model = MutableStateFlow(HealthModel.default)
-    val model = _model.asStateFlow()
+    private val _model = MutableSharedFlow<HealthModel>()
+    val model = _model.asSharedFlow()
 
     init {
         collectSettingModel()
@@ -50,12 +52,12 @@ class HealthProvider(
             if(hpPoint < 100) hpPoint = HealthModel.defaultPoint
             if(mpPoint < 100) mpPoint = HealthModel.defaultPoint
 
-            _model.update {
-                it.copy(
+            _model.emit (
+                HealthModel(
                     hpPoint = hpPoint,
                     mpPoint = mpPoint,
                 )
-            }
+            )
         }
     }
 
@@ -64,14 +66,11 @@ class HealthProvider(
 
         return try {
             val origin = tesseract.doOCR(pointImage.toAwtImage())
-
-            val filtered = origin
                 .substringBefore("\n")
                 .substringAfter(" ")
                 .replace("(", "")
-                .filterNot { it.isWhitespace() }
-                .dropLast(1)
-
+                .replace(" ", "")
+            val filtered = origin.substring(0, origin.length - 1)
             val index = if(filtered.length % 2 == 0) {
                 filtered.length/2 - 1
             } else {
@@ -80,7 +79,7 @@ class HealthProvider(
 
             val result = filtered.substring(0, index)
 
-            println("OCR: $origin --> $filtered --> $result")
+//            println("OCR: $origin => $result")
             return result.toIntOrNull()
         } catch (e: Exception) {
             null
