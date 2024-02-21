@@ -1,6 +1,7 @@
 package com.jooheon.maple.potion.automatic
 
 import com.jooheon.maple.potion.health.HealthModel
+import com.jooheon.maple.potion.health.RingBuffer
 import com.jooheon.maple.potion.setting.SettingModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +21,9 @@ class PotionEater(
     private val healthState: StateFlow<HealthModel>,
     private val settingState: StateFlow<SettingModel>,
 ) {
+    private val hpBuffer = RingBuffer(SIZE) { settingState.value.fullHp.toFloat() }
+    private val mpBuffer = RingBuffer(SIZE) { settingState.value.fullMp.toFloat() }
+
     init {
         collectHealthState()
     }
@@ -28,21 +32,44 @@ class PotionEater(
         healthState.collectLatest {
             val state = settingState.value
 
-            if(it.hpPoint != HealthModel.defaultPoint) {
+            val hpPoint = it.hpPoint.toFloat()
+            if(filter(hpBuffer, hpPoint)) {
+                hpBuffer.append(hpPoint)
+
                 maybeEatPotion(
-                    percentage = ((it.hpPoint.toFloat() / state.fullHp.toFloat()) * 100f).toInt(),
+                    percentage = ((hpPoint / state.fullHp.toFloat()) * 100f).toInt(),
                     targetPercentage = state.hpEatPercentage,
                     keyEvent = KeyEvent.VK_PAGE_UP
                 )
             }
 
-            maybeEatPotion(
-                percentage = ((it.mpPoint.toFloat() / state.fullMp.toFloat()) * 100f).toInt(),
-                targetPercentage = state.mpEatPercentage,
-                keyEvent = KeyEvent.VK_PAGE_DOWN
-            )
+            val mpPoint = it.mpPoint.toFloat()
+            if(filter(mpBuffer, mpPoint)) {
+                hpBuffer.append(mpPoint)
+                maybeEatPotion(
+                    percentage = ((mpPoint / state.fullMp.toFloat()) * 100f).toInt(),
+                    targetPercentage = state.mpEatPercentage,
+                    keyEvent = KeyEvent.VK_PAGE_DOWN
+                )
+            }
         }
     }
+
+    private fun filter(buffer: RingBuffer<Float>, value: Float): Boolean {
+        if(value == HealthModel.defaultPoint.toFloat()) return false
+
+        var sum = 0f
+        repeat(buffer.size) { buffer.getOrNull(it)?.let { sum += it } }
+        val average = sum / buffer.size.toFloat()
+        val minimumValue = average / 1.5f
+        val maximumValue = average * 1.5f
+
+        if(minimumValue > value) return false
+        if(maximumValue < value) return false
+
+        return true
+    }
+
 
     private suspend fun maybeEatPotion(
         percentage: Int,
@@ -60,4 +87,9 @@ class PotionEater(
     private suspend fun wait(time: Int) = withContext(Dispatchers.IO) {
         delay(time.toLong())
     }
+
+    companion object {
+        private const val SIZE = 100
+    }
+
 }
