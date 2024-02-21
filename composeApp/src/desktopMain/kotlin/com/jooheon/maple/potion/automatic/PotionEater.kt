@@ -45,7 +45,7 @@ class PotionEater(
 
             val mpPoint = it.mpPoint.toFloat()
             if(filter(mpBuffer, mpPoint)) {
-                hpBuffer.append(mpPoint)
+                mpBuffer.append(mpPoint)
                 maybeEatPotion(
                     percentage = ((mpPoint / state.fullMp.toFloat()) * 100f).toInt(),
                     targetPercentage = state.mpEatPercentage,
