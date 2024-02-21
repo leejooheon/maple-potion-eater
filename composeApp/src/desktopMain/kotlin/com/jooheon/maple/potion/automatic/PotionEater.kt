@@ -64,6 +64,7 @@ class PotionEater(
         val minimumValue = average / 1.5f
         val maximumValue = average * 1.5f
 
+        println("PotionEat Filter: $average[min: $minimumValue, max: $maximumValue] -> $value")
         if(minimumValue > value) return false
         if(maximumValue < value) return false
 
