@@ -81,7 +81,7 @@ class DisplayProvider(
     private fun cropImage(image: BufferedImage, point: Point?): ImageBitmap? {
         if(point == null) return null
         return try {
-            image.getSubimage(point.x(), point.y(), 112, 24).toComposeImageBitmap()
+            image.getSubimage(point.x(), point.y(), Width, Height).toComposeImageBitmap()
         } catch (e: Exception) {
             null
         }
@@ -133,5 +133,11 @@ class DisplayProvider(
 
         this.hpTemplateImage = hpGrayImage
         this.mpTemplateImage = mpGrayImage
+    }
+
+    companion object {
+        const val Width = 112
+        const val Height = 24
+        const val Ratio = Width.toFloat() / Height.toFloat()
     }
 }

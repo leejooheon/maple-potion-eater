@@ -26,7 +26,22 @@ fun DisplayScreen(
     screenState: DisplayModel,
     healthState: HealthModel,
     settingState: SettingModel,
+    hpFilterState: Pair<Int, Int>,
+    mpFilterState: Pair<Int, Int>,
 ) {
+
+    val hpState = if(healthState.hpPoint != HealthModel.defaultPoint) {
+        "[${healthState.hpPoint} / ${settingState.fullHp}]"
+    } else {
+        "undefined"
+    } + " : [${hpFilterState.first} ~ ${hpFilterState.second}]"
+
+    val mpState = if(healthState.mpPoint != HealthModel.defaultPoint) {
+        "[${healthState.mpPoint} / ${settingState.fullMp}]"
+    } else {
+        "undefined"
+    } + " : [${mpFilterState.first} ~ ${mpFilterState.second}]"
+
     Column(
         modifier = Modifier.padding(32.dp)
     ) {
@@ -81,12 +96,12 @@ fun DisplayScreen(
                     bitmap = screenState.hpImage,
                     contentDescription = null,
                     contentScale = ContentScale.FillBounds,
-                    modifier = Modifier.fillMaxWidth().aspectRatio(16f / 9f)
+                    modifier = Modifier.fillMaxWidth().aspectRatio(DisplayProvider.Ratio)
                 )
                 Text(
                     color = Color.Black,
-                    style = MaterialTheme.typography.h5,
-                    text = "${healthState.hpPoint} / ${settingState.fullHp}",
+                    style = MaterialTheme.typography.h6,
+                    text = hpState,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -108,13 +123,13 @@ fun DisplayScreen(
                     bitmap = screenState.mpImage,
                     contentDescription = null,
                     contentScale = ContentScale.FillBounds,
-                    modifier = Modifier.fillMaxWidth().aspectRatio(16f / 9f)
+                    modifier = Modifier.fillMaxWidth().aspectRatio(DisplayProvider.Ratio)
                 )
 
                 Text(
                     color = Color.Black,
-                    style = MaterialTheme.typography.h5,
-                    text = "${healthState.mpPoint} / ${settingState.fullMp}",
+                    style = MaterialTheme.typography.h6,
+                    text = mpState,
                 )
             }
         }
@@ -129,6 +144,7 @@ private fun ScreenDisplayPreview() {
             screenState = DisplayModel.default,
             healthState = HealthModel.default,
             settingState = SettingModel.default,
+            Pair(0, 0), Pair(0, 0)
         )
     }
 }

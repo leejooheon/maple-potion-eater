@@ -103,7 +103,7 @@ private fun TabsContent(
             settingState = settingProvider.model
         )
     }
-    remember {
+    val potionEater = remember {
         PotionEater(
             robot = robot,
             scope = scope,
@@ -121,6 +121,8 @@ private fun TabsContent(
     val settingState by settingProvider.model.collectAsState()
     val screenState by displayProvider.model.collectAsState()
     val healthState by healthProvider.model.collectAsState(HealthModel.default)
+    val hpFilterState by potionEater.hpFilterState.collectAsState()
+    val mpFilterState by potionEater.mpFilterState.collectAsState()
 
     HorizontalPager(pagerState) { page ->
         Column(
@@ -133,6 +135,8 @@ private fun TabsContent(
                         screenState = screenState,
                         healthState = healthState,
                         settingState = settingState,
+                        hpFilterState = hpFilterState,
+                        mpFilterState = mpFilterState,
                     )
                     Button(onClick = { start = !start }) {
                         Text(

@@ -6,8 +6,10 @@ import com.jooheon.maple.potion.setting.SettingModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -26,6 +28,12 @@ class PotionEater(
     private val hpBuffer = RingBuffer(SIZE) { settingState.value.fullHp.toFloat() }
     private val mpBuffer = RingBuffer(SIZE) { settingState.value.fullMp.toFloat() }
 
+    private val _hpFilterState = MutableStateFlow(Pair(0, 0))
+    val hpFilterState = _hpFilterState.asStateFlow()
+
+    private val _mpFilterState = MutableStateFlow(Pair(0, 0))
+    val mpFilterState = _mpFilterState.asStateFlow()
+
     init {
         collectHealthState()
     }
@@ -36,6 +44,7 @@ class PotionEater(
 
             val hpPoint = it.hpPoint.toFloat()
             val hpFilter = filter(
+                state = _hpFilterState,
                 buffer = hpBuffer,
                 value = hpPoint,
                 max = settingState.value.fullHp.toFloat()
@@ -56,6 +65,7 @@ class PotionEater(
             if(it.mpPoint != HealthModel.defaultPoint) mpBuffer.append(mpPoint)
 
             val mpFilter = filter(
+                state = _mpFilterState,
                 buffer = mpBuffer,
                 value = mpPoint,
                 max = settingState.value.fullMp.toFloat()
@@ -74,7 +84,12 @@ class PotionEater(
         }
     }
 
-    private fun filter(buffer: RingBuffer<Float>, value: Float, max: Float): Boolean {
+    private fun filter(
+        state: MutableStateFlow<Pair<Int, Int>>,
+        buffer: RingBuffer<Float>,
+        value: Float,
+        max: Float,
+    ): Boolean {
         if(value == HealthModel.defaultPoint.toFloat()) return false
 
         var sum = 0f
@@ -87,6 +102,7 @@ class PotionEater(
         if(minimumValue > value) return false
         if(maximumValue < value) return false
 
+        state.tryEmit(Pair(minimumValue.toInt(), maximumValue.toInt()))
         buffer.append(value)
         return true
     }
