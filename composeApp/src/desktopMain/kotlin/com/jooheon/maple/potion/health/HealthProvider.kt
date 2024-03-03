@@ -69,6 +69,7 @@ class HealthProvider(
                 .substringBefore("\n")
                 .substringAfter(" ")
                 .replace("(", "")
+                .replace("[", "")
                 .replace(" ", "")
             val filtered = origin.substring(0, origin.length - 1)
             val index = if(filtered.length % 2 == 0) {
@@ -79,7 +80,7 @@ class HealthProvider(
 
             val result = filtered.substring(0, index)
 
-//            println("OCR: $origin => $result")
+            println("OCR: $origin => $result")
             return result.toIntOrNull()
         } catch (e: Exception) {
             null

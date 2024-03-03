@@ -47,7 +47,8 @@ class PotionEater(
                 state = _hpFilterState,
                 buffer = hpBuffer,
                 value = hpPoint,
-                max = settingState.value.fullHp.toFloat()
+                max = settingState.value.fullHp.toFloat(),
+                multiple = HP_MULTIPLE
             )
 
             if(hpFilter) {
@@ -68,7 +69,8 @@ class PotionEater(
                 state = _mpFilterState,
                 buffer = mpBuffer,
                 value = mpPoint,
-                max = settingState.value.fullMp.toFloat()
+                max = settingState.value.fullMp.toFloat(),
+                multiple = MP_MULTIPLE
             )
 
             if(mpFilter) {
@@ -89,14 +91,15 @@ class PotionEater(
         buffer: RingBuffer<Float>,
         value: Float,
         max: Float,
+        multiple: Float,
     ): Boolean {
         if(value == HealthModel.defaultPoint.toFloat()) return false
 
         var sum = 0f
         repeat(buffer.size) { buffer.getOrNull(it)?.let { sum += it } }
         val average = sum / buffer.size.toFloat()
-        val minimumValue = average / MULTIPLE
-        val maximumValue = min(average * MULTIPLE, max)
+        val minimumValue = average / multiple
+        val maximumValue = min(average * multiple, max)
 
         println("PotionEat Filter: $average[min: $minimumValue, max: $maximumValue] -> $value")
         if(minimumValue > value) return false
@@ -127,7 +130,8 @@ class PotionEater(
 
     companion object {
         private const val SIZE = 20
-        private const val MULTIPLE = 1.7f
+        private const val MP_MULTIPLE = 1.3f
+        private const val HP_MULTIPLE = 2f
     }
 
 }
